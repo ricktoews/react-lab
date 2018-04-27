@@ -1,22 +1,17 @@
-import React, { Fragment } from 'react'
-import { Grid, Typography } from 'material-ui'
+import React from 'react'
+import { Typography } from 'material-ui'
+import { chapter9 } from '../../revelation.js';
 
-export default ({ passage }) => {
+export default () => {
+	var passage = chapter9
 
     return <div>
-      <Grid container>
-      <Typography>
-      {passage.map(verse => {
-        return <Grid container>
-        <Grid item sm={1} />
-        <Grid item sm>
-          <p>{verse.text}</p>
-        </Grid>
-        <Grid item sm={1} />
-        </Grid>
+      <Typography variant="title" style={{marginTop:10}}>Revelation 9</Typography>
+      <Typography variant="body1">
+      {passage.map((verse, ndx) => {
+        return <p key={ndx}>{verse.text}</p>
       })}
       </Typography>
-      </Grid>
     </div>
 }
 
