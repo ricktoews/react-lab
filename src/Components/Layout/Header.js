@@ -1,74 +1,89 @@
-import React, { Component } from 'react'
-import { AppBar, Toolbar, Typography, IconButton, Tabs } from 'material-ui'
-import { Tab } from 'material-ui'
-import MenuIcon from '@material-ui/icons/Menu'
-import Menu, { MenuItem } from 'material-ui/Menu'
+// Stolen from Tabs demo at material-ui site.
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import { AppBar, Tabs } from 'material-ui';
+import { Tab } from 'material-ui/Tabs';
+import { Typography } from 'material-ui';
+import { withRouter } from 'react-router-dom';
 
-function navigate(to) {
-	if (to === 'home') {
-		document.location = '/';
-	} else if (to === 'passage') {
-		document.location = '/passage';
-	}
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
 }
 
-export default class extends Component {
-  state = {
-    anchorEl: null
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
+
+class SimpleTabs extends React.Component {
+  constructor(props) {
+    super(props);
+    this.dests = [
+      '/',
+      '/passage',
+      '/decimal',
+    ];
+console.log('constructor, props', props.location.pathname, this.dests.indexOf(props.location.pathname));
+    let currentPath = props.location.pathname;
+    let currentValue = this.dests.indexOf(currentPath) || 0;
+    this.state = {
+      value: currentValue
+    };
   }
 
-  handleTab = (event) => {
-    console.log('handleTab', event.currentTarget);
-    var el = event.currentTarget;
-    var tab = el.dataset.tab;
-	navigate(tab);
-    
+  navigate = (value) => {
+    var dest = this.dests[value];
+// Apparently the reason why this isn't updating the comonent has to do with Update Blocking?
+// https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/guides/blocked-updates.md
+//    this.props.history.push(dest);
+    document.location = dest;
   }
 
-  handleClick = (event) => {
-	var el = event.currentTarget;
-    this.setState({ anchorEl: el });
-  }
-
-  handleClose = (event) => {
-	var el = event.currentTarget;
-console.log('el', el.dataset.item);
-	if (el.dataset.item === 'home') {
-		document.location = '/';
-	} else if (el.dataset.item === 'passages') {
-		document.location = '/passage';
-	}
-    this.setState({ anchorEl: null });
+  handleChange = (event, value) => {
+    this.setState({ value });
+    this.navigate(value);
   };
 
+  componentDidMount() {
+    console.log('componentDidMount', this.props.history, this.props.location);
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount', this.props.history, this.props.location);
+  }
+
   render() {
-    const { anchorEl } = this.state
+    const { classes } = this.props;
+    const { value } = this.state;
 
-    return <AppBar position="static">
-      <Toolbar>
-        <IconButton color="inherit" aria-label="Menu">
-          <MenuIcon
-            onClick={this.handleClick}
-          />
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleClose}
-          >
-            <MenuItem onClick={this.handleClose} data-item="home">Home</MenuItem>
-            <MenuItem onClick={this.handleClose} data-item="passages">Passages</MenuItem>
-            <MenuItem onClick={this.handleClose} data-item="about">About</MenuItem>
-          </Menu>
-        </IconButton>
-        <Tabs indicatorColor="primary" centered>
-          <Tab onClick={this.handleTab} data-tab="home" label="Home"></Tab>
-          <Tab onClick={this.handleTab} data-tab="passage" label="Passage"></Tab>
-          <Tab onClick={this.handleTab} label="FAQ"></Tab>
-        </Tabs>
-      </Toolbar>
-    </AppBar>
-
+    return (
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Tabs value={value} onChange={this.handleChange}>
+            <Tab label="Home" />
+            <Tab label="Passage" />
+            <Tab label="Decimal Calculator" />
+          </Tabs>
+        </AppBar>
+      </div>
+    );
   }
 }
 
+SimpleTabs.propTypes = {
+  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+};
+
+export default withRouter(withStyles(styles)(SimpleTabs));
