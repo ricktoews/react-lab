@@ -31,8 +31,7 @@ class SimpleTabs extends React.Component {
     super(props);
     this.dests = [
       '/',
-      '/passage',
-      '/decimal',
+      '/about',
     ];
 console.log('constructor, props', props.location.pathname, this.dests.indexOf(props.location.pathname));
     let currentPath = props.location.pathname;
@@ -72,8 +71,7 @@ console.log('constructor, props', props.location.pathname, this.dests.indexOf(pr
         <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Home" />
-            <Tab label="Passage" />
-            <Tab label="Decimal Calculator" />
+            <Tab label="About" />
           </Tabs>
         </AppBar>
       </div>

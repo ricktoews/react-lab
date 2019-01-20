@@ -12,7 +12,7 @@ import Footer from './Layout/Footer'
 import Home from './Home'
 import Passage from './Passage'
 import DecimalCalc from './DecimalCalc'
-import About from './Passage'
+import About from './About'
 
 const theme = createMuiTheme({
 	palette: {
@@ -22,7 +22,9 @@ const theme = createMuiTheme({
 
 const styles = theme => ({
 	contents: {
-		marginTop: 20
+		marginTop: 20,
+        width: '90%',
+        margin: 'auto'
 	},
 	pageContent: {
 		zIndex:100,
@@ -45,21 +47,12 @@ class App extends Component {
       <div>
       <div className={classes.pageContent}>
       <Header />
-      <Grid container className={classes.contents}>
-        <Grid item sm={1} />
-        <Grid item sm={10}>
-          <CssBaseline />
           <Router>
-            <div>
+            <div className={classes.contents}>
               <Route exact path="/" component={Home}/>
-              <Route path="/passage" component={Passage} />
               <Route path="/about" component={About} />
-              <Route path="/decimal" component={DecimalCalc} />
             </div>
           </Router>
-        </Grid>
-        <Grid item sm={1} />
-      </Grid>
       </div>
       </div>
     </MuiThemeProvider>
